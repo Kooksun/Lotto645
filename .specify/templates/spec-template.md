@@ -67,49 +67,31 @@
 
 ### Edge Cases
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right edge cases.
--->
-
-- What happens when [boundary condition]?
-- How does system handle [error scenario]?
+- What happens when Firebase rejects a ticket write due to network loss?
+- How does the system handle duplicate ticket submissions before confirmation?
+- How are draws retried when randomness generation fails?
 
 ## Requirements *(mandatory)*
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right functional requirements.
--->
-
 ### Functional Requirements
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
-
-*Example of marking unclear requirements:*
-
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-001**: System MUST allow users to generate Lotto645 tickets with six unique numbers and issuer metadata.
+- **FR-002**: System MUST persist each issued ticket to Firebase Realtime Database before acknowledging success in the UI.
+- **FR-003**: Users MUST be able to view a live-updating list of issued tickets sourced exclusively from Firebase.
+- **FR-004**: System MUST execute a draw that selects winning numbers with an auditable random seed and store the results in Firebase.
+- **FR-005**: System MUST emit `[Lotto645]` prefixed console logs for each major step (issue, list refresh, draw start, draw completion, error paths).
+- **FR-006**: Needs clarification if manual draw overrides are required and, if so, what authorization workflow governs them.
 
 ### Key Entities *(include if feature involves data)*
 
-- **[Entity 1]**: [What it represents, key attributes without implementation]
-- **[Entity 2]**: [What it represents, relationships to other entities]
+- **Ticket**: Represents a Lotto645 submission with six numbers, purchaser details (if captured), timestamp, and status.
+- **Draw**: Captures draw identifier, winning numbers, seed/timestamp, and references to winning ticket IDs.
 
 ## Success Criteria *(mandatory)*
 
-<!--
-  ACTION REQUIRED: Define measurable success criteria.
-  These must be technology-agnostic and measurable.
--->
-
 ### Measurable Outcomes
 
-- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
-- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
-- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
-- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+- **SC-001**: Users can issue a ticket and see it listed within 2 seconds on typical broadband connections.
+- **SC-002**: Draw execution completes within 1 second and stores results with seed metadata in Firebase.
+- **SC-003**: Console logs include the required checkpoints for 100% of happy-path and error-path scenarios during QA.
+- **SC-004**: System remains functional with 1,000 tickets issued without degraded draw performance or logging gaps.

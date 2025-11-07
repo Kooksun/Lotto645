@@ -20,26 +20,28 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+- Frontend source: `frontend/src/`
+- Shared services: `frontend/src/services/`
+- Pages: `frontend/src/pages/`
+- Playwright tests: `tests/e2e/`
+- Vitest suites: `frontend/src/**/__tests__/`
+- Update paths when the implementation plan specifies deviations
 
-<!-- 
+<!--
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
-  
+
   The /speckit.tasks command MUST replace these with actual tasks based on:
   - User stories from spec.md (with their priorities P1, P2, P3...)
   - Feature requirements from plan.md
   - Entities from data-model.md
   - Endpoints from contracts/
-  
+
   Tasks MUST be organized by user story so each story can be:
   - Implemented independently
   - Tested independently
   - Delivered as an MVP increment
-  
+
   DO NOT keep these sample tasks in the generated tasks.md file.
   ============================================================================
 -->
@@ -48,9 +50,9 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T001 Bootstrap Vite + React + TypeScript project in `frontend/`
+- [ ] T002 Install Firebase Web SDK, Vitest, Playwright, ESLint, and Prettier dependencies
+- [ ] T003 [P] Configure linting, formatting, and CI scripts for `pnpm lint`, `pnpm test`, and `pnpm test:e2e`
 
 ---
 
@@ -60,89 +62,81 @@ description: "Task list template for feature implementation"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-Examples of foundational tasks (adjust based on your project):
-
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T004 Document Firebase Realtime Database schema and security rules in `docs/firebase.md`
+- [ ] T005 [P] Implement `frontend/src/services/firebaseClient.ts` to wrap database reads and writes
+- [ ] T006 [P] Create shared logging utility in `frontend/src/services/logger.ts` enforcing `[Lotto645]` prefix formatting
+- [ ] T007 [P] Build randomness helper in `frontend/src/services/drawRng.ts` using `crypto.getRandomValues`
+- [ ] T008 Configure `.env.example` with Firebase credentials and document setup in `docs/quickstart.md`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
 ---
 
-## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - Issue Tickets (Priority: P1) 🎯 MVP
 
-**Goal**: [Brief description of what this story delivers]
+**Goal**: Users can issue a Lotto645 ticket with six unique numbers and receive confirmation.
 
-**Independent Test**: [How to verify this story works on its own]
+**Independent Test**: QA can issue a ticket, observe success logs, and confirm persistence in Firebase without relying on other stories.
 
 ### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T010 [P] [US1] Playwright test `tests/e2e/issue-ticket.spec.ts` validating issuance flow
+- [ ] T011 [P] [US1] Vitest unit test `frontend/src/services/__tests__/ticketService.test.ts` covering Firebase writes
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T012 [P] [US1] Implement `frontend/src/services/ticketService.ts` with ticket creation logic
+- [ ] T013 [P] [US1] Build `frontend/src/pages/IssueTicketPage.tsx` UI with number picker and validation
+- [ ] T014 [US1] Wire Firebase persistence with `[Lotto645][issue:start|success|error]` logs and optimistic UI
+- [ ] T015 [US1] Persist issuance metadata (timestamp, optional user alias) and display confirmation state
+- [ ] T016 [US1] Document issuance flow and logging checkpoints in `docs/user-stories.md`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
 ---
 
-## Phase 4: User Story 2 - [Title] (Priority: P2)
+## Phase 4: User Story 2 - List Tickets (Priority: P2)
 
-**Goal**: [Brief description of what this story delivers]
+**Goal**: Users can view all issued tickets with live updates sourced from Firebase.
 
-**Independent Test**: [How to verify this story works on its own]
+**Independent Test**: QA can open the list view, observe real-time updates after issuing tickets, and see required logs without other stories.
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T018 [P] [US2] Playwright test `tests/e2e/list-tickets.spec.ts` validating realtime updates
+- [ ] T019 [P] [US2] Vitest unit test `frontend/src/services/__tests__/ticketSubscription.test.ts` covering listeners
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+- [ ] T020 [P] [US2] Implement `frontend/src/services/ticketSubscription.ts` for Firebase listeners
+- [ ] T021 [US2] Build `frontend/src/pages/TicketListPage.tsx` with live table and status indicators
+- [ ] T022 [US2] Emit `[Lotto645][list:subscribe|update|error]` logs for subscription lifecycle events
+- [ ] T023 [US2] Ensure navigation between Issue and List pages refreshes Firebase state before rendering
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
 ---
 
-## Phase 5: User Story 3 - [Title] (Priority: P3)
+## Phase 5: User Story 3 - Draw Results (Priority: P3)
 
-**Goal**: [Brief description of what this story delivers]
+**Goal**: Users can execute a draw, review winning numbers, and audit persisted metadata.
 
-**Independent Test**: [How to verify this story works on its own]
+**Independent Test**: QA can execute a draw, confirm stored metadata in Firebase, and review console logs without other stories.
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T024 [P] [US3] Playwright test `tests/e2e/draw-results.spec.ts` validating draw flow and display
+- [ ] T025 [P] [US3] Vitest unit test `frontend/src/services/__tests__/drawService.test.ts` covering randomness and persistence
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T026 [P] [US3] Implement `frontend/src/services/drawService.ts` persisting draw payload with seed metadata
+- [ ] T027 [US3] Build `frontend/src/pages/DrawResultsPage.tsx` with result visualization and audit details
+- [ ] T028 [US3] Emit `[Lotto645][draw:start|complete|error]` logs and surface stored seed/timestamp in the UI
 
 **Checkpoint**: All user stories should now be independently functional
-
----
-
-[Add more user story phases as needed, following the same pattern]
 
 ---
 
@@ -150,12 +144,12 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
+- [ ] TXXX [P] Documentation updates in `docs/` with latest Firebase schema and logging checkpoints
+- [ ] TXXX Code cleanup, shared component refactors, and bundle size tracking
+- [ ] TXXX Performance profiling for ticket subscription throughput and draw execution time
+- [ ] TXXX [P] Additional unit tests in `frontend/src/**/__tests__/`
+- [ ] TXXX Security review of Firebase rules and environment handling
+- [ ] TXXX Validate `docs/quickstart.md` setup steps end to end
 
 ---
 
@@ -167,31 +161,29 @@ Examples of foundational tasks (adjust based on your project):
 - **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
 - **User Stories (Phase 3+)**: All depend on Foundational phase completion
   - User stories can then proceed in parallel (if staffed)
-  - Or sequentially in priority order (P1 → P2 → P3)
+  - Or sequentially in priority order (P1 -> P2 -> P3)
 - **Polish (Final Phase)**: Depends on all desired user stories being complete
 
 ### User Story Dependencies
 
-- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
-- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 but should be independently testable
-- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - May integrate with US1/US2 but should be independently testable
+- **User Story 1 (P1)**: Can start after Foundational (Phase 2); no dependencies on other stories
+- **User Story 2 (P2)**: Can start after Foundational (Phase 2); may observe tickets issued by US1 but remains independently testable
+- **User Story 3 (P3)**: Can start after Foundational (Phase 2); consumes tickets from Firebase but must not rely on US2 UI
 
 ### Within Each User Story
 
 - Tests (if included) MUST be written and FAIL before implementation
-- Models before services
-- Services before endpoints
-- Core implementation before integration
+- Services and Firebase interactions MUST be completed before wiring pages
+- Pages/UI layers must integrate logging checkpoints before review
 - Story complete before moving to next priority
 
 ### Parallel Opportunities
 
 - All Setup tasks marked [P] can run in parallel
-- All Foundational tasks marked [P] can run in parallel (within Phase 2)
-- Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
-- All tests for a user story marked [P] can run in parallel
-- Models within a story marked [P] can run in parallel
-- Different user stories can be worked on in parallel by different team members
+- Foundational tasks marked [P] can run in parallel once dependencies clarified
+- After Foundational completion, user stories can be staffed independently
+- Playwright and Vitest suites marked [P] can execute concurrently
+- Shared utilities can be developed in parallel when touching separate files
 
 ---
 
@@ -199,12 +191,12 @@ Examples of foundational tasks (adjust based on your project):
 
 ```bash
 # Launch all tests for User Story 1 together (if tests requested):
-Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
-Task: "Integration test for [user journey] in tests/integration/test_[name].py"
+Task: "Playwright test for issuance in tests/e2e/issue-ticket.spec.ts"
+Task: "Vitest unit test for ticket service in frontend/src/services/__tests__/ticketService.test.ts"
 
-# Launch all models for User Story 1 together:
-Task: "Create [Entity1] model in src/models/[entity1].py"
-Task: "Create [Entity2] model in src/models/[entity2].py"
+# Launch all core work for User Story 1 together:
+Task: "Implement ticketService.ts in frontend/src/services/ticketService.ts"
+Task: "Build IssueTicketPage.tsx UI in frontend/src/pages/IssueTicketPage.tsx"
 ```
 
 ---
@@ -216,15 +208,15 @@ Task: "Create [Entity2] model in src/models/[entity2].py"
 1. Complete Phase 1: Setup
 2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
 3. Complete Phase 3: User Story 1
-4. **STOP and VALIDATE**: Test User Story 1 independently
+4. **STOP and VALIDATE**: Test User Story 1 independently with Firebase write verification and console log capture
 5. Deploy/demo if ready
 
 ### Incremental Delivery
 
-1. Complete Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
-3. Add User Story 2 → Test independently → Deploy/Demo
-4. Add User Story 3 → Test independently → Deploy/Demo
+1. Complete Setup + Foundational -> Foundation ready
+2. Add User Story 1 -> Test independently -> Deploy/Demo (MVP)
+3. Add User Story 2 -> Test independently -> Deploy/Demo
+4. Add User Story 3 -> Test independently -> Deploy/Demo
 5. Each story adds value without breaking previous stories
 
 ### Parallel Team Strategy
@@ -247,5 +239,5 @@ With multiple developers:
 - Each user story should be independently completable and testable
 - Verify tests fail before implementing
 - Commit after each task or logical group
-- Stop at any checkpoint to validate story independently
+- Capture console logs during QA to prove compliance with the constitution
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence

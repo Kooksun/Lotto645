@@ -3,7 +3,7 @@
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
+**Note**: This template is filled in by the `/speckit.plan` command. Consult project automation docs for the latest execution workflow.
 
 ## Summary
 
@@ -11,27 +11,25 @@
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 5.x targeting evergreen browsers  
+**Primary Dependencies**: React 18, Vite, Firebase Web SDK (modular)  
+**Storage**: Firebase Realtime Database  
+**Testing**: Vitest for units, Playwright for end-to-end simulation  
+**Target Platform**: Chromium, WebKit, and Gecko browsers (desktop + mobile)  
+**Project Type**: Single-page web application  
+**Performance Goals**: First load bundle <= 1 MB gzipped, interactive < 2s on mid-tier devices  
+**Constraints**: Client-only runtime; all persistence and sync via Firebase; no server-side logic without approval  
+**Scale/Scope**: Up to 1,000 concurrent simulated users observing synchronized draws
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] Feature scope limited to ticket issuance, ticket listing, and draw/result presentation unless governance waiver attached.
+- [ ] Plan documents distinct issuance and results view components/routes and how Firebase synchronizes shared data.
+- [ ] Firebase data model, validation rules, and configuration management steps captured for this work.
+- [ ] Logging checkpoints enumerated with `[Lotto645]` prefixes covering user flows and async operations.
+- [ ] Draw algorithm describes randomness source, persisted metadata (seed/timestamp), and audit verification steps.
 
 ## Project Structure
 
@@ -48,51 +46,22 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+frontend/
+├── public/
+└── src/
+    ├── components/
+    ├── pages/
+    ├── services/
+    ├── hooks/
+    └── styles/
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+└── e2e/
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Single-page React app served from `frontend/` with end-to-end coverage in `tests/e2e/`; feature plans MUST call out any deviations.
 
 ## Complexity Tracking
 
@@ -100,5 +69,4 @@ directories captured above]
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| _Fill if applicable_ |  |  |

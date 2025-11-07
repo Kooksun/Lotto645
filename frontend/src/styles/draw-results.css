@@ -1,0 +1,277 @@
+.draw-panel {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 4);
+  padding: calc(var(--spacing-unit) * 4);
+  border: 1px solid var(--color-border-muted);
+  border-radius: calc(var(--spacing-unit) * 4);
+  background: rgba(15, 23, 42, 0.7);
+  box-shadow: var(--shadow-elevation-sm);
+}
+
+.draw-panel--wheel {
+  background: linear-gradient(140deg, rgba(99, 102, 241, 0.15), rgba(34, 211, 238, 0.12));
+}
+
+.draw-panel__heading h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.draw-panel__heading p {
+  margin: calc(var(--spacing-unit) * 2) 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.draw-panel__error {
+  margin: 0;
+  padding: calc(var(--spacing-unit) * 3);
+  border-radius: calc(var(--spacing-unit) * 2);
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.6);
+  color: var(--color-error);
+  font-size: 0.95rem;
+}
+
+.draw-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: calc(var(--spacing-unit) * 3);
+}
+
+.draw-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 1);
+}
+
+.draw-meta dt {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.draw-meta dd {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.draw-timeline {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.draw-timeline li {
+  flex: 1;
+  min-width: 80px;
+  padding: calc(var(--spacing-unit) * 3);
+  border-radius: calc(var(--spacing-unit) * 3);
+  border: 1px solid var(--color-border-muted);
+  text-align: center;
+  background: rgba(15, 23, 42, 0.6);
+  transition: border-color var(--motion-duration-short) var(--motion-easing-standard), transform var(--motion-duration-short) var(--motion-easing-standard);
+}
+
+.draw-timeline li[data-status='complete'] {
+  border-color: rgba(52, 211, 153, 0.7);
+}
+
+.draw-timeline li[data-status='active'] {
+  border-color: rgba(99, 102, 241, 0.9);
+  transform: translateY(calc(var(--motion-scale-enabled) * -2px));
+}
+
+.draw-timeline span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.draw-timeline strong {
+  display: block;
+  margin-top: calc(var(--spacing-unit) * 2);
+  font-size: 1.2rem;
+}
+
+.draw-controls {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 3);
+}
+
+.draw-controls__button {
+  border: none;
+  border-radius: calc(var(--spacing-unit) * 3);
+  padding: calc(var(--spacing-unit) * 3);
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--color-text-primary);
+  transition: background var(--motion-duration-short) var(--motion-easing-standard), transform var(--motion-duration-short) var(--motion-easing-standard);
+}
+
+.draw-controls__button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.draw-controls__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.draw-controls__button--primary {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+
+.draw-controls__button--danger {
+  background: rgba(248, 113, 113, 0.25);
+  color: var(--color-error);
+}
+
+.draw-controls__hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.draw-controls__hint--alert {
+  color: var(--color-error);
+}
+
+.roulette {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--spacing-unit) * 3);
+}
+
+.roulette__ring {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+
+.roulette__ring-gradient {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--color-accent-primary), var(--color-accent-secondary), var(--color-accent-primary));
+  filter: blur(0.5px);
+  animation: roulette-spin 5s linear infinite;
+}
+
+.roulette[data-status='completed'] .roulette__ring-gradient,
+.roulette[data-status='idle'] .roulette__ring-gradient {
+  animation-play-state: paused;
+  opacity: 0.5;
+}
+
+.roulette__ring-core {
+  position: absolute;
+  inset: calc(var(--spacing-unit) * 4);
+  border-radius: 50%;
+  background: rgba(2, 6, 23, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing-unit) * 2);
+  text-align: center;
+  padding: calc(var(--spacing-unit) * 4);
+}
+
+.roulette__status {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.roulette__number {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.roulette__countdown {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+}
+
+.roulette__pointer {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--color-accent-secondary);
+  border-radius: 2px;
+  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+}
+
+.roulette__progress {
+  width: 100%;
+  border-radius: calc(var(--spacing-unit) * 3);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  padding: calc(var(--spacing-unit) * 1.5);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing-unit) * 3);
+}
+
+.roulette__progress-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  overflow: hidden;
+}
+
+.roulette__progress-fill {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-accent-secondary), var(--color-accent-primary));
+  transition: width var(--motion-duration-long) var(--motion-easing-standard);
+}
+
+.roulette__progress span {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  min-width: 48px;
+  text-align: right;
+}
+
+@keyframes roulette-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roulette__ring-gradient {
+    animation: none;
+  }
+
+  .draw-timeline li {
+    transition: none;
+  }
+
+  .draw-controls__button {
+    transition: none;
+  }
+}

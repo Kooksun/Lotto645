@@ -1,0 +1,15 @@
+# Dependencies & build output
+node_modules/
+dist/
+build/
+coverage/
+*.min.js
+
+# Generated playwright assets
+tests/e2e/.playwright/
+
+# Configuration + environment noise
+.env*
+.DS_Store
+.idea/
+.vscode/

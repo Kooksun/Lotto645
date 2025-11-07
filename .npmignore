@@ -1,0 +1,25 @@
+# Build artifacts
+dist/
+build/
+coverage/
+frontend/dist/
+frontend/build/
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Tests and internal docs
+tests/
+specs/
+**/__tests__/
+
+# Configuration and env files
+.env
+.env.*
+*.log
+*.tmp
+*.swp
+.DS_Store
+.idea/
+.vscode/
