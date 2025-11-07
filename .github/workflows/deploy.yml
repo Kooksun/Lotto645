@@ -24,13 +24,17 @@ jobs:
           node-version: '20'
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9 # Use pnpm 9.x
+
+      - name: Clean pnpm store
+        working-directory: ./frontend
+        run: pnpm store prune
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build project
         working-directory: ./frontend
