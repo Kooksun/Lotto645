@@ -38,6 +38,14 @@ jobs:
 
       - name: Build project
         working-directory: ./frontend
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_LOTTO_SESSION_KEY: ${{ secrets.VITE_LOTTO_SESSION_KEY }}
+          VITE_HOST_SECRET: ${{ secrets.VITE_HOST_SECRET }}
         run: pnpm build
 
       - name: Deploy to GitHub Pages
