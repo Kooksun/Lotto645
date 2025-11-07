@@ -8,26 +8,31 @@ import { SessionProvider } from './context/SessionProvider';
 import './styles/theme.css';
 import './index.css';
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: [
+        {
+          index: true,
+          element: <IssueTicketPage />
+        },
+        {
+          path: 'issue',
+          element: <IssueTicketPage />
+        },
+        {
+          path: 'draw',
+          element: <DrawDashboardPage />
+        }
+      ]
+    }
+  ],
   {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: <IssueTicketPage />
-      },
-      {
-        path: 'issue',
-        element: <IssueTicketPage />
-      },
-      {
-        path: 'draw',
-        element: <DrawDashboardPage />
-      }
-    ]
+    basename: '/Lotto645'
   }
-]);
+);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

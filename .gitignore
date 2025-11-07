@@ -24,3 +24,11 @@ Thumbs.db
 
 # Test artifacts
 tests/e2e/.playwright/
+
+# Gemini CLI
+.codex/
+.specify/
+
+# Ignore files
+.eslintignore
+.npmignore
