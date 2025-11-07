@@ -118,19 +118,13 @@ function normalizeDrawState(snapshot: DataSnapshot): DrawState | null {
   const drawStatus: DrawStatus =
     status === 'idle' || status === 'in_progress' || status === 'completed' || status === 'error' ? status : 'idle';
 
-  const error = record.error;
+  const error = record.error as Record<string, unknown> | null;
   const normalizedError: DrawErrorState | null =
-    error && typeof error === 'object'
+    error
       ? {
-          code: typeof (error as Record<string, unknown>).code === 'string' ? (error as Record<string, unknown>).code : undefined,
-          message:
-            typeof (error as Record<string, unknown>).message === 'string'
-              ? (error as Record<string, unknown>).message
-              : undefined,
-          timestamp:
-            typeof (error as Record<string, unknown>).timestamp === 'string'
-              ? (error as Record<string, unknown>).timestamp
-              : undefined
+          code: typeof error.code === 'string' ? error.code : undefined,
+          message: typeof error.message === 'string' ? error.message : undefined,
+          timestamp: typeof error.timestamp === 'string' ? error.timestamp : undefined
         }
       : null;
 

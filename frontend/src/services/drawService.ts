@@ -34,6 +34,7 @@ function normalizeDrawState(snapshotValue: unknown): DrawState {
       startedAt: null,
       completedAt: null,
       status: 'idle',
+      controllerId: null,
       error: null
     };
   }

@@ -80,7 +80,7 @@ export function useDrawController(options: UseDrawControllerOptions): DrawContro
   const [nextRunAt, setNextRunAt] = useState<number | null>(null);
   const [nowTick, setNowTick] = useState<number>(() => Date.now());
 
-  const autoStepTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoStepTimeout = useRef<number | null>(null);
   const stepInFlight = useRef(false);
   const mountedRef = useRef(true);
 
