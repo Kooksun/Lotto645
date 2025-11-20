@@ -11,6 +11,18 @@
 
 .draw-panel--wheel {
   background: linear-gradient(140deg, rgba(99, 102, 241, 0.15), rgba(34, 211, 238, 0.12));
+  padding: calc(var(--spacing-unit) * 6);
+  /* Larger padding for main panel */
+  align-items: center;
+  /* Center content */
+}
+
+.draw-panel__header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: calc(var(--spacing-unit) * 4);
 }
 
 .draw-panel__heading h3 {
@@ -19,9 +31,9 @@
 }
 
 .draw-panel__heading p {
-  margin: calc(var(--spacing-unit) * 2) 0 0;
+  margin: calc(var(--spacing-unit) * 1) 0 0;
   color: var(--color-text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .draw-panel__error {
@@ -32,45 +44,60 @@
   border: 1px solid rgba(248, 113, 113, 0.6);
   color: var(--color-error);
   font-size: 0.95rem;
+  width: 100%;
+  text-align: center;
 }
 
 .draw-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: calc(var(--spacing-unit) * 3);
+  display: flex;
+  justify-content: center;
+  gap: calc(var(--spacing-unit) * 6);
+  width: 100%;
+  padding-top: calc(var(--spacing-unit) * 4);
+  border-top: 1px dashed rgba(148, 163, 184, 0.3);
 }
 
 .draw-meta div {
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing-unit) * 1);
+  align-items: center;
 }
 
 .draw-meta dt {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: var(--color-text-secondary);
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .draw-meta dd {
   margin: 0;
   font-weight: var(--font-weight-semibold);
+  font-size: 0.9rem;
+}
+
+.draw-panel__timeline {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: calc(var(--spacing-unit) * 2);
 }
 
 .draw-timeline {
   display: flex;
-  gap: calc(var(--spacing-unit) * 3);
+  gap: calc(var(--spacing-unit) * 2);
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-x: auto;
+  justify-content: center;
 }
 
 .draw-timeline li {
-  flex: 1;
-  min-width: 80px;
-  padding: calc(var(--spacing-unit) * 3);
-  border-radius: calc(var(--spacing-unit) * 3);
+  min-width: 50px;
+  padding: calc(var(--spacing-unit) * 1.5);
+  border-radius: calc(var(--spacing-unit) * 2);
   border: 1px solid var(--color-border-muted);
   text-align: center;
   background: rgba(15, 23, 42, 0.6);
@@ -79,45 +106,51 @@
 
 .draw-timeline li[data-status='complete'] {
   border-color: rgba(52, 211, 153, 0.7);
+  background: rgba(52, 211, 153, 0.1);
 }
 
 .draw-timeline li[data-status='active'] {
   border-color: rgba(99, 102, 241, 0.9);
-  transform: translateY(calc(var(--motion-scale-enabled) * -2px));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 .draw-timeline span {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   color: var(--color-text-secondary);
+  margin-bottom: 4px;
 }
 
 .draw-timeline strong {
   display: block;
-  margin-top: calc(var(--spacing-unit) * 2);
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .draw-controls {
   display: flex;
-  flex-direction: column;
-  gap: calc(var(--spacing-unit) * 3);
+  flex-direction: row;
+  /* Changed to row for better horizontal layout in main column */
+  gap: calc(var(--spacing-unit) * 1.5);
+  flex-wrap: wrap;
 }
 
 .draw-controls__button {
+  flex: 1;
   border: none;
-  border-radius: calc(var(--spacing-unit) * 3);
-  padding: calc(var(--spacing-unit) * 3);
-  font-size: 1rem;
+  border-radius: calc(var(--spacing-unit) * 2);
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 3);
+  font-size: 0.85rem;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   background: rgba(148, 163, 184, 0.2);
   color: var(--color-text-primary);
   transition: background var(--motion-duration-short) var(--motion-easing-standard), transform var(--motion-duration-short) var(--motion-easing-standard);
+  min-width: 60px;
 }
 
 .draw-controls__button:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   background: rgba(148, 163, 184, 0.3);
 }
 
@@ -151,13 +184,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--spacing-unit) * 3);
+  gap: calc(var(--spacing-unit) * 4);
+  padding: calc(var(--spacing-unit) * 2) 0;
 }
 
 .roulette__ring {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 280px;
+  /* Increased size */
+  height: 280px;
 }
 
 .roulette__ring-gradient {
@@ -165,8 +200,13 @@
   inset: 0;
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--color-accent-primary), var(--color-accent-secondary), var(--color-accent-primary));
-  filter: blur(0.5px);
+  filter: blur(1px);
   animation: roulette-spin 5s linear infinite;
+}
+
+.roulette[data-status='in_progress'] .roulette__ring-gradient {
+  animation-duration: 2s;
+  /* Faster spin during draw */
 }
 
 .roulette[data-status='completed'] .roulette__ring-gradient,
@@ -188,41 +228,54 @@
   gap: calc(var(--spacing-unit) * 2);
   text-align: center;
   padding: calc(var(--spacing-unit) * 4);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
 }
 
 .roulette__status {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
 }
 
 .roulette__number {
-  font-size: 3rem;
+  font-size: 4.5rem;
+  /* Larger number */
   margin: 0;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+.roulette__number.is-pulsing {
+  animation: roulette-pulse 0.5s ease-out;
+  color: var(--color-accent-secondary);
+  text-shadow: 0 0 30px var(--color-accent-secondary);
 }
 
 .roulette__countdown {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: var(--color-text-secondary);
 }
 
 .roulette__pointer {
   position: absolute;
-  top: -10px;
+  top: -12px;
   left: 50%;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   transform: translateX(-50%) rotate(45deg);
   background: var(--color-accent-secondary);
-  border-radius: 2px;
-  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.6);
+  z-index: 10;
 }
 
 .roulette__progress {
   width: 100%;
+  max-width: 400px;
   border-radius: calc(var(--spacing-unit) * 3);
   border: 1px solid rgba(148, 163, 184, 0.3);
   padding: calc(var(--spacing-unit) * 1.5);
@@ -257,8 +310,23 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes roulette-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -273,5 +341,9 @@
 
   .draw-controls__button {
     transition: none;
+  }
+
+  .roulette__number.is-pulsing {
+    animation: none;
   }
 }

@@ -103,57 +103,56 @@ function DrawDashboardPage(): JSX.Element {
 
   return (
     <section className="draw-dashboard">
-      <header className="draw-dashboard__header">
-        <div>
-          <p className="draw-dashboard__eyebrow">활성 세션</p>
-          <h1>{session.sessionKey}</h1>
-          <p className="draw-dashboard__subhead">발급 현황과 추첨, 초기화를 한 곳에서 제어합니다.</p>
-        </div>
-        <div className="draw-dashboard__metrics">
-          <div>
-            <span>총 티켓</span>
-            <strong data-testid="ticket-board-count">{boardState.total}</strong>
-          </div>
-          <div>
-            <span>마지막 갱신</span>
-            <strong>{formatTimestamp(boardState.lastUpdatedAt, '대기 중')}</strong>
-          </div>
-          <div>
-            <span>추첨 상태</span>
-            <strong data-testid="draw-status-value">{drawStatusLabel}</strong>
-          </div>
-          <div>
-            <span>제어 호스트</span>
-            <strong data-testid="draw-controller-label">{formatControllerLabel(drawController.controllerId)}</strong>
-          </div>
-        </div>
-      </header>
+      {/* Header removed as requested */}
 
       <div className="draw-dashboard__layout">
-        <section className="ticket-board" aria-labelledby="ticket-board-heading">
-          <div className="ticket-board__heading">
-            <div>
-              <p className="ticket-board__eyebrow">실시간 티켓 스트림</p>
-              <h2 id="ticket-board-heading" data-testid="ticket-board-heading">
-                발급 티켓 보드
-              </h2>
-            </div>
-            <ul className="ticket-board__diff" aria-label="최근 동기화 현황">
-              <li>+{diffSummary.added} 신규</li>
-              <li>{diffSummary.updated} 업데이트</li>
-              <li>-{diffSummary.removed} 제거</li>
-            </ul>
-          </div>
-
-          <TicketList tickets={boardState.tickets} isLoading={boardState.isLoading} error={boardState.error} />
-        </section>
-
-        <aside className="draw-dashboard__rail">
+        <main className="draw-dashboard__main">
           <div className="draw-panel draw-panel--wheel">
-            <div className="draw-panel__heading">
-              <h3>룰렛 추첨</h3>
-              <p>5초 간격으로 자동 추첨되며 즉시 추첨 버튼으로 속도를 높일 수 있습니다.</p>
+            <div className="draw-panel__header-row">
+              <div className="draw-panel__heading">
+                <h3>룰렛 추첨</h3>
+                <p>5초 간격으로 자동 추첨됩니다.</p>
+              </div>
+              <div className="draw-controls">
+                <button
+                  type="button"
+                  className="draw-controls__button draw-controls__button--primary"
+                  onClick={() => {
+                    void drawController.startDraw();
+                  }}
+                  disabled={!drawController.canStart}
+                  data-testid="draw-start-button"
+                  title={drawController.isStarting ? '준비 중...' : '추첨 시작'}
+                >
+                  {drawController.isStarting ? '...' : '시작'}
+                </button>
+                <button
+                  type="button"
+                  className="draw-controls__button"
+                  onClick={() => {
+                    void drawController.forceNext();
+                  }}
+                  disabled={!drawController.canForceNext}
+                  data-testid="draw-next-button"
+                  title={drawController.isStepping ? '추첨 중...' : '즉시 추첨'}
+                >
+                  {drawController.isStepping ? '...' : '즉시'}
+                </button>
+                <button
+                  type="button"
+                  className="draw-controls__button draw-controls__button--danger"
+                  onClick={() => {
+                    void drawController.resetSession();
+                  }}
+                  disabled={!drawController.canReset}
+                  data-testid="draw-reset-button"
+                  title={drawController.isResetting ? '초기화 중...' : '초기화'}
+                >
+                  {drawController.isResetting ? '...' : '리셋'}
+                </button>
+              </div>
             </div>
+
             <RouletteWheel
               status={drawController.status}
               activeNumber={drawController.activeNumber}
@@ -161,88 +160,59 @@ function DrawDashboardPage(): JSX.Element {
               drawnCount={drawController.numbers.length}
               totalNumbers={6}
             />
+
             {drawController.error ? (
               <p className="draw-panel__error" role="alert" data-testid="draw-error-banner">
                 {drawController.error}
               </p>
             ) : null}
+
+            <div className="draw-panel__timeline">
+              <ol className="draw-timeline" data-testid="draw-timeline">
+                {drawController.timeline.map((entry) => (
+                  <li key={entry.index} data-status={entry.status} data-testid="draw-timeline-entry">
+                    <span>#{entry.index}</span>
+                    <strong>{entry.number ?? '--'}</strong>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
             <dl className="draw-meta">
               <div>
                 <dt>Seed</dt>
                 <dd>{drawController.seed ?? '—'}</dd>
               </div>
               <div>
-                <dt>시작 시간</dt>
+                <dt>시작</dt>
                 <dd>{formatTimestamp(drawController.startedAt)}</dd>
               </div>
               <div>
-                <dt>완료 시간</dt>
+                <dt>완료</dt>
                 <dd>{formatTimestamp(drawController.completedAt)}</dd>
               </div>
             </dl>
           </div>
+        </main>
 
-          <div className="draw-panel">
-            <div className="draw-panel__heading">
-              <h3>추첨 타임라인</h3>
-              <p>각 단계는 티켓 하이라이트와 동시에 갱신됩니다.</p>
+        <aside className="draw-dashboard__side">
+          <section className="ticket-board" aria-labelledby="ticket-board-heading">
+            <div className="ticket-board__heading">
+              <div>
+                <p className="ticket-board__eyebrow">실시간 티켓 스트림</p>
+                <h2 id="ticket-board-heading" data-testid="ticket-board-heading">
+                  발급 티켓 보드 ({boardState.total})
+                </h2>
+              </div>
+              <ul className="ticket-board__diff" aria-label="최근 동기화 현황">
+                <li>+{diffSummary.added} 신규</li>
+                <li>{diffSummary.updated} 업데이트</li>
+                <li>-{diffSummary.removed} 제거</li>
+              </ul>
             </div>
-            <ol className="draw-timeline" data-testid="draw-timeline">
-              {drawController.timeline.map((entry) => (
-                <li key={entry.index} data-status={entry.status} data-testid="draw-timeline-entry">
-                  <span>#{entry.index}</span>
-                  <strong>{entry.number ?? '--'}</strong>
-                </li>
-              ))}
-            </ol>
-          </div>
 
-          <div className="draw-panel">
-            <div className="draw-panel__heading">
-              <h3>진행 제어</h3>
-              <p>모든 동작은 콘솔에 `[Lotto645]` 로그로 남습니다.</p>
-            </div>
-            <div className="draw-controls">
-              <button
-                type="button"
-                className="draw-controls__button draw-controls__button--primary"
-                onClick={() => {
-                  void drawController.startDraw();
-                }}
-                disabled={!drawController.canStart}
-                data-testid="draw-start-button"
-              >
-                {drawController.isStarting ? '추첨 준비 중…' : '추첨 시작'}
-              </button>
-              <button
-                type="button"
-                className="draw-controls__button"
-                onClick={() => {
-                  void drawController.forceNext();
-                }}
-                disabled={!drawController.canForceNext}
-                data-testid="draw-next-button"
-              >
-                {drawController.isStepping ? '추첨 중…' : '즉시 추첨'}
-              </button>
-              <button
-                type="button"
-                className="draw-controls__button draw-controls__button--danger"
-                onClick={() => {
-                  void drawController.resetSession();
-                }}
-                disabled={!drawController.canReset}
-                data-testid="draw-reset-button"
-              >
-                {drawController.isResetting ? '초기화 중…' : '세션 초기화'}
-              </button>
-            </div>
-            <p className={`draw-controls__hint${isControlLocked ? ' draw-controls__hint--alert' : ''}`}>
-              {isControlLocked
-                ? '다른 호스트가 추첨을 제어 중입니다. 버튼이 비활성화될 수 있습니다.'
-                : '초기화 시 모든 티켓과 추첨 정보가 삭제됩니다.'}
-            </p>
-          </div>
+            <TicketList tickets={boardState.tickets} isLoading={boardState.isLoading} error={boardState.error} />
+          </section>
         </aside>
       </div>
     </section>
