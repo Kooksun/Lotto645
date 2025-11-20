@@ -1,22 +1,27 @@
 import { useMemo } from 'react';
 import type { NumberSelectionState } from '../../hooks/useNumberSelection';
 
-const GRID_ROWS = 5;
-const GRID_COLUMNS = 9;
+const GRID_ROWS = 7; // Will be dynamic based on columns, but for 45 numbers / 7 cols = 7 rows (last one partial)
+const GRID_COLUMNS = 7;
 
 interface NumberGridProps {
   selection: Pick<NumberSelectionState, 'selectedNumbers' | 'toggleNumber' | 'isSelected' | 'canSelectMore'>;
   disabled?: boolean;
   minNumber?: number;
+  maxNumber?: number;
 }
 
-function buildMatrix(minNumber: number): number[][] {
+function buildMatrix(minNumber: number, maxNumber: number = 45): number[][] {
   const matrix: number[][] = [];
+  let currentNumber = minNumber;
 
-  for (let rowIndex = 0; rowIndex < GRID_ROWS; rowIndex += 1) {
+  while (currentNumber <= maxNumber) {
     const row: number[] = [];
-    for (let columnIndex = 0; columnIndex < GRID_COLUMNS; columnIndex += 1) {
-      row.push(minNumber + rowIndex + GRID_ROWS * columnIndex);
+    for (let i = 0; i < GRID_COLUMNS; i++) {
+      if (currentNumber <= maxNumber) {
+        row.push(currentNumber);
+        currentNumber++;
+      }
     }
     matrix.push(row);
   }
