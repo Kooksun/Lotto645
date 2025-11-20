@@ -199,14 +199,19 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--color-accent-primary), var(--color-accent-secondary), var(--color-accent-primary));
+  background: conic-gradient(from 0deg,
+      #ff0080 0%,
+      #7928ca 25%,
+      #00d4ff 50%,
+      #7928ca 75%,
+      #ff0080 100%);
   filter: blur(1px);
-  animation: roulette-spin 5s linear infinite;
+  animation: roulette-spin 3s linear infinite;
 }
 
 .roulette[data-status='in_progress'] .roulette__ring-gradient {
-  animation-duration: 2s;
-  /* Faster spin during draw */
+  animation-duration: 0.8s;
+  /* Much faster spin during draw */
 }
 
 .roulette[data-status='completed'] .roulette__ring-gradient,
@@ -260,18 +265,7 @@
   color: var(--color-text-secondary);
 }
 
-.roulette__pointer {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  width: 24px;
-  height: 24px;
-  transform: translateX(-50%) rotate(45deg);
-  background: var(--color-accent-secondary);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.6);
-  z-index: 10;
-}
+/* Pointer removed for cleaner gradient animation */
 
 .roulette__progress {
   width: 100%;

@@ -98,7 +98,6 @@ function RouletteWheel({ status, activeNumber, countdownSeconds, totalNumbers, d
             {formatCountdown(countdownSeconds)}
           </p>
         </div>
-        <span className="roulette__pointer" aria-hidden="true" />
       </div>
 
     </div>

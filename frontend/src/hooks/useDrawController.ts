@@ -270,8 +270,10 @@ export function useDrawController(options: UseDrawControllerOptions): DrawContro
       const number = numbers[index] ?? null;
       let slotStatus: DrawTimelineEntry['status'] = 'pending';
       if (number !== null) {
-        slotStatus = index === numbers.length - 1 && status === 'in_progress' ? 'active' : 'complete';
+        // 이미 추첨된 숫자는 모두 'complete' 상태
+        slotStatus = 'complete';
       } else if (status === 'in_progress' && index === numbers.length) {
+        // 다음에 추첨될 빈 슬롯만 'active' 상태
         slotStatus = 'active';
       }
       return {
