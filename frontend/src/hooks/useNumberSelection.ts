@@ -10,10 +10,12 @@ export interface NumberSelectionState {
   remainingSlots: number;
   canSelectMore: boolean;
   isComplete: boolean;
+  wasAutoSelected: boolean;
   toggleNumber(value: number): void;
   isSelected(value: number): boolean;
   reset(): void;
   setSelection(values: number[]): void;
+  markAsAutoSelected(): void;
 }
 
 function clampToRange(values: Iterable<number>): number[] {
@@ -36,6 +38,7 @@ function clampToRange(values: Iterable<number>): number[] {
 
 export function useNumberSelection(): NumberSelectionState {
   const [selection, setSelection] = useState<number[]>([]);
+  const [wasAutoSelected, setWasAutoSelected] = useState(false);
 
   const remainingSlots = MAX_SELECTION - selection.length;
   const canSelectMore = remainingSlots > 0;
@@ -65,6 +68,11 @@ export function useNumberSelection(): NumberSelectionState {
 
   const reset = useCallback(() => {
     setSelection([]);
+    setWasAutoSelected(false);
+  }, []);
+
+  const markAsAutoSelected = useCallback(() => {
+    setWasAutoSelected(true);
   }, []);
 
   const isSelected = useCallback((value: number) => selection.includes(value), [selection]);
@@ -75,11 +83,13 @@ export function useNumberSelection(): NumberSelectionState {
       remainingSlots,
       canSelectMore,
       isComplete,
+      wasAutoSelected,
       toggleNumber,
       isSelected,
       reset,
-      setSelection: handleSetSelection
+      setSelection: handleSetSelection,
+      markAsAutoSelected
     }),
-    [selection, remainingSlots, canSelectMore, isComplete, toggleNumber, isSelected, reset, handleSetSelection]
+    [selection, remainingSlots, canSelectMore, isComplete, wasAutoSelected, toggleNumber, isSelected, reset, handleSetSelection, markAsAutoSelected]
   );
 }

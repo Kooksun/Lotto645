@@ -17,10 +17,10 @@ export interface AutoSelectState {
 }
 
 export function useAutoSelect(
-  selection: Pick<NumberSelectionState, 'selectedNumbers' | 'setSelection'>,
+  selection: Pick<NumberSelectionState, 'selectedNumbers' | 'setSelection' | 'markAsAutoSelected'>,
   options?: UseAutoSelectOptions
 ): AutoSelectState {
-  const { selectedNumbers, setSelection } = selection;
+  const { selectedNumbers, setSelection, markAsAutoSelected } = selection;
   const [isAutoSelecting, setIsAutoSelecting] = useState(false);
   const [error, setError] = useState<unknown | null>(null);
   const canAutoSelect = selectedNumbers.length < MAX_SELECTION;
@@ -34,6 +34,7 @@ export function useAutoSelect(
     try {
       const completed = completeSelection(selectedNumbers, MAX_SELECTION);
       setSelection(completed);
+      markAsAutoSelected();
       setError(null);
       options?.onComplete?.(completed);
       return completed;
@@ -44,7 +45,7 @@ export function useAutoSelect(
     } finally {
       setIsAutoSelecting(false);
     }
-  }, [canAutoSelect, options, selectedNumbers, setSelection]);
+  }, [canAutoSelect, options, selectedNumbers, setSelection, markAsAutoSelected]);
 
   const resetError = useCallback(() => {
     setError(null);

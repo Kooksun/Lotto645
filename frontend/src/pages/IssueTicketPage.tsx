@@ -63,25 +63,13 @@ function IssueTicketPage(): JSX.Element {
 
     try {
       for (const set of validSets) {
-        // Determine source: if all numbers were manually picked, 'manual'.
-        // But we don't track per-number source.
-        // We can track if auto-select was used at all for this set?
-        // The previous implementation had a simple state.
-        // For now, let's default to 'manual' unless we want to track it more complexly.
-        // Or we can check if the set was fully auto-selected?
-        // Let's simplify: if the user clicked auto-select, we could flag it.
-        // But `useAutoSelect` doesn't expose "wasAutoSelected".
-        // Let's just pass 'manual' for now or 'auto' if we want to be precise later.
-        // Actually, the previous code set `ticketSource` state on auto-complete.
-        // We can do that here too if we want, but for simplicity let's assume 'manual' mixed with 'auto' is 'auto'?
-        // Let's just send 'manual' for now as source isn't critical for the UI redesign.
-        // Wait, the requirement said "Auto Select" works per set.
-        // Let's just use 'manual' as default.
+        // Determine source based on whether auto-select was used
+        const ticketSource: TicketSource = set.selection.wasAutoSelected ? 'auto' : 'manual';
 
         await issueTicket({
           name: playerName.trim(),
           numbers: set.selection.selectedNumbers,
-          source: 'manual', // simplified
+          source: ticketSource,
           clientId: session.clientId,
           sessionKey: session.sessionKey
         });
